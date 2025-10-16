@@ -1,0 +1,33 @@
+# Professional Stem Splitter - Requirements
+# AI-powered audio stem separation web application
+
+# Web Framework
+Flask==2.3.3
+Werkzeug==2.3.7
+
+# Audio Processing and AI
+torch>=2.0.0
+torchaudio>=2.0.0
+demucs>=4.0.1
+
+# Audio File Handling
+librosa>=0.10.0
+soundfile>=0.12.1
+pydub>=0.25.1
+
+# System and File Handling
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Optional: GPU Support (uncomment if using CUDA)
+# torch==2.0.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+# torchaudio==2.0.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+
+# Development and Utilities (optional)
+# gunicorn>=21.2.0  # For production deployment
+# python-dotenv>=1.0.0  # For environment variables
+
+# Note: FFmpeg is required for audio processing but must be installed separately
+# Ubuntu/Debian: sudo apt update && sudo apt install ffmpeg
+# macOS: brew install ffmpeg
+# Windows: Download from https://ffmpeg.org/download.html

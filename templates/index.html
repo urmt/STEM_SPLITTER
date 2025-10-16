@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Stem Splitter | AI-Powered Audio Separation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Ensure stem progress is visible during debugging */
+        .stem-progress-section[style*="display: none"] {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-waveform-path"></i>
+                <span>StemSplitter Pro</span>
+            </div>
+            <nav class="nav">
+                <a href="#features">Features</a>
+                <a href="#models">Models</a>
+                <a href="#about">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1 class="hero-title">Professional AI Stem Separation</h1>
+                <p class="hero-subtitle">Extract vocals, instruments, drums, and bass with studio-quality precision</p>
+            </section>
+
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSection">
+                <div class="upload-card">
+                    <!-- Model Selection -->
+                    <div class="model-selection">
+                        <label for="modelSelect" class="model-label">
+                            <i class="fas fa-brain"></i>
+                            AI Model
+                        </label>
+                        <select id="modelSelect" class="model-select">
+                            <option value="htdemucs" selected>HTDemucs (4 stems) - Recommended</option>
+                            <option value="htdemucs_ft">HTDemucs Fine-tuned (4 stems)</option>
+                            <option value="htdemucs_6s">HTDemucs 6-Stem (6 stems)</option>
+                        </select>
+                    </div>
+
+                    <!-- Output Directory Selection -->
+                    <div class="output-selection">
+                        <label for="outputDirectory" class="output-label">
+                            <i class="fas fa-folder-open"></i>
+                            Output Directory (Optional)
+                        </label>
+                        <div class="directory-input-group">
+                            <input type="text" id="outputDirectory" class="directory-input" placeholder="Leave empty to use default location" />
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="selectDirectory()">
+                                <i class="fas fa-folder"></i>
+                                Browse
+                            </button>
+                        </div>
+                        <div class="directory-help">
+                            <i class="fas fa-info-circle"></i>
+                            Default: Downloads to the application's output folder. Custom: Choose your preferred save location.
+                        </div>
+                    </div>
+
+                    <!-- Drag & Drop Area -->
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="upload-title">Drag & Drop Your Audio File</h3>
+                        <p class="upload-subtitle">or click to browse files</p>
+                        <div class="upload-formats">
+                            <span class="format-tag">MP3</span>
+                            <span class="format-tag">WAV</span>
+                            <span class="format-tag">FLAC</span>
+                            <span class="format-tag">M4A</span>
+                            <span class="format-tag">AAC</span>
+                            <span class="format-tag">OGG</span>
+                        </div>
+                        <input type="file" id="audioFile" accept=".mp3,.wav,.flac,.m4a,.aac,.ogg" hidden>
+                    </div>
+
+                    <!-- Processing Section -->
+                    <div class="processing-section" id="processingSection" style="display: none;">
+                        <div class="processing-header">
+                            <h3 class="processing-title">Processing Audio</h3>
+                            <div class="processing-status" id="processingStatus">Initializing...</div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                            <div class="progress-text" id="progressText">0%</div>
+                        </div>
+
+                        <div class="processing-details">
+                            <div class="detail-item">
+                                <span class="detail-label">File:</span>
+                                <span class="detail-value" id="fileName">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Model:</span>
+                                <span class="detail-value" id="modelName">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status:</span>
+                                <span class="detail-value" id="statusText">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Output:</span>
+                                <span class="detail-value" id="outputPath">Default location</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Individual Stem Progress -->
+                        <div class="stem-progress-section" id="stemProgressSection" style="display: none;">
+                            <h4 class="stem-progress-title">Stem Separation Progress</h4>
+                            <div class="stem-progress-grid" id="stemProgressGrid">
+                                <!-- Individual stem progress bars will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2 class="results-title">
+                        <i class="fas fa-music"></i>
+                        Separated Stems
+                    </h2>
+                    <p class="results-subtitle">Your audio has been successfully separated into individual stems</p>
+                </div>
+
+                <div class="stems-grid" id="stemsGrid">
+                    <!-- Stems will be dynamically added here -->
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-secondary" onclick="resetApp()">
+                        <i class="fas fa-plus"></i>
+                        Process Another File
+                    </button>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features" id="features">
+                <h2 class="section-title">Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="feature-title">AI-Powered</h3>
+                        <p class="feature-description">State-of-the-art Demucs models for professional-quality stem separation</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Real-time Progress</h3>
+                        <p class="feature-description">Live processing status with detailed progress tracking</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cloud-download-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Instant Download</h3>
+                        <p class="feature-description">Download individual stems or complete packages instantly</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-audio"></i>
+                        </div>
+                        <h3 class="feature-title">Multiple Formats</h3>
+                        <p class="feature-description">Support for MP3, WAV, FLAC, M4A, AAC, and OGG files</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 StemSplitter Pro. Professional AI-powered audio separation.</p>
+        </div>
+    </footer>
+
+    <!-- Audio Player Modal -->
+    <div class="modal" id="audioModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Audio Player</h3>
+                <button class="modal-close" onclick="closeAudioModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <audio controls id="audioPlayer" preload="metadata">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
