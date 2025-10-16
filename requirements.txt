@@ -3,7 +3,7 @@
 
 # Web Framework
 Flask==2.3.3
-Werkzeug==2.3.7
+Werkzeug==3.0.6
 
 # Audio Processing and AI
 torch>=2.0.0
